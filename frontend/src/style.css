@@ -192,6 +192,7 @@ body {
   min-height: calc(100vh - 190px);
   display: flex;
   flex-direction: column;
+  padding-bottom: 82px;
 }
 
 .library-row {
@@ -258,7 +259,7 @@ body {
 .floating-upload {
   position: fixed;
   right: 34px;
-  bottom: 34px;
+  bottom: 108px;
   width: 58px;
   height: 58px;
   min-width: 58px;
