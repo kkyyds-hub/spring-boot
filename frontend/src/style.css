@@ -170,6 +170,15 @@ body {
   font-size: 13px;
 }
 
+.upload-icon {
+  font-size: 44px;
+  color: #2f7d6b;
+}
+
+.upload-table {
+  margin-top: 18px;
+}
+
 .charts {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

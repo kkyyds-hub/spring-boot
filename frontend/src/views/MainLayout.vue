@@ -11,6 +11,10 @@
           <el-icon><Collection /></el-icon>
           <span>分类管理</span>
         </el-menu-item>
+        <el-menu-item index="/files">
+          <el-icon><UploadFilled /></el-icon>
+          <span>文件上传</span>
+        </el-menu-item>
         <el-menu-item index="/stats">
           <el-icon><TrendCharts /></el-icon>
           <span>数据统计</span>
@@ -39,7 +43,7 @@
 <script setup>
 import { computed } from "vue";
 import { useRouter } from "vue-router";
-import { Collection, Document, TrendCharts } from "@element-plus/icons-vue";
+import { Collection, Document, TrendCharts, UploadFilled } from "@element-plus/icons-vue";
 
 const router = useRouter();
 const user = computed(() => JSON.parse(localStorage.getItem("user") || "{}"));

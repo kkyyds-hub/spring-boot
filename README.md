@@ -15,7 +15,7 @@
 | 登录认证模块 | `AuthController`、`AuthService`、`AuthServiceImpl`、`UserMapper`，包含登录和注册 |
 | 登录拦截模块 | `TokenInterceptor`、`WebConfig` |
 | 信息管理模块 | `MaterialController`、`MaterialService`、`MaterialServiceImpl`、`MaterialMapper`、`NoteMapper` |
-| 文件上传模块 | `FileController`、`FileService`、`FileServiceImpl`、`CloudFileServiceImpl` |
+| 文件上传模块 | `FileController`、`FileService`、`FileServiceImpl`、`CloudFileServiceImpl`、前端 `FileUploadView.vue` |
 | 数据统计模块 | `StatsController`、`StatsService`、`StatsServiceImpl`、前端 `StatsView.vue` |
 | 操作日志模块 | `LogController`、`LogService`、`LogServiceImpl`、`OperationLogMapper` |
 
@@ -119,6 +119,10 @@ lsof -ti:15180 | xargs kill
 `MaterialView.vue` 提交表单 -> `MaterialController.add` 接收请求 -> `MaterialService` 定义业务接口 -> `MaterialServiceImpl.add` 处理资料、笔记和日志 -> `MaterialMapper.xml` 写入 `study_material` -> `NoteMapper.xml` 写入 `material_note` -> `OperationLogMapper.xml` 写入 `operation_log`。
 
 登录后的接口都会先经过 `TokenInterceptor`，校验请求头中的 `token` 或 `Authorization`。
+
+文件上传链路：
+
+`FileUploadView.vue` 选择文件 -> `FileController.upload` 接收文件 -> `FileServiceImpl.upload` 保存上传记录和日志 -> `CloudFileServiceImpl.upload` 判断 OSS 配置，配置完整时上传阿里云 OSS，否则保存本地 `uploads`。
 
 ## 推荐演示顺序
 
