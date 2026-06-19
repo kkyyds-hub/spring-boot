@@ -9,21 +9,23 @@
       <div>点击或拖拽上传公共学习资料</div>
     </el-upload>
 
-    <template v-else>
-      <el-table :data="pageRecords" border>
-        <el-table-column prop="originalName" label="文件名" min-width="240" show-overflow-tooltip />
-        <el-table-column label="大小" width="110">
-          <template #default="{ row }">{{ formatSize(row.fileSize) }}</template>
-        </el-table-column>
-        <el-table-column prop="uploadUser" label="上传人" width="120" />
-        <el-table-column prop="createTime" label="上传时间" width="190" />
-        <el-table-column label="操作" width="150" fixed="right">
-          <template #default="{ row }">
-            <el-button link type="primary" @click="openFile(row.fileUrl)">打开</el-button>
-            <el-button link type="danger" @click="remove(row)">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
+    <div v-else class="library-list">
+      <div v-for="row in pageRecords" :key="row.id" class="library-row">
+        <div class="library-file-icon">{{ suffix(row.originalName) }}</div>
+        <div class="library-file-main">
+          <h3>{{ row.originalName }}</h3>
+          <p>{{ row.fileUrl }}</p>
+        </div>
+        <div class="library-meta">
+          <span>上传人：{{ row.uploadUser }}</span>
+          <span>大小：{{ formatSize(row.fileSize) }}</span>
+          <span>{{ row.createTime }}</span>
+        </div>
+        <div class="library-actions">
+          <el-button type="primary" plain @click="openFile(row.fileUrl)">打开</el-button>
+          <el-button type="danger" plain @click="remove(row)">删除</el-button>
+        </div>
+      </div>
 
       <el-pagination
         class="pager"
@@ -33,9 +35,11 @@
         v-model:page-size="pageSize"
         :total="records.length"
       />
-    </template>
+    </div>
 
-    <el-button class="floating-upload" type="primary" circle :icon="UploadFilled" @click="dialogVisible = true" />
+    <button class="floating-upload" type="button" title="上传资料" @click="dialogVisible = true">
+      <el-icon><UploadFilled /></el-icon>
+    </button>
 
     <el-dialog v-model="dialogVisible" title="上传公共学习资料" width="560px">
       <el-upload drag :http-request="handleUpload" :show-file-list="false">
@@ -79,6 +83,11 @@ function formatSize(size) {
   if (size < 1024) return `${size} B`;
   if (size < 1024 * 1024) return `${(size / 1024).toFixed(1)} KB`;
   return `${(size / 1024 / 1024).toFixed(1)} MB`;
+}
+
+function suffix(name) {
+  const text = name.includes(".") ? name.substring(name.lastIndexOf(".") + 1) : "FILE";
+  return text.slice(0, 4).toUpperCase();
 }
 
 function openFile(url) {
