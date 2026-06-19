@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.studysystem.mapper.OperationLogMapper">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into operation_log(user_id, operator, operation_type, operation_content, operation_time)
+        values (#{userId}, #{operator}, #{operationType}, #{operationContent}, #{operationTime})
+    </insert>
+
+    <select id="page" resultType="OperationLog">
+        select id, user_id, operator, operation_type, operation_content, operation_time
+        from operation_log
+        order by operation_time desc, id desc
+        limit #{offset}, #{pageSize}
+    </select>
+
+    <select id="count" resultType="long">
+        select count(1) from operation_log
+    </select>
+</mapper>

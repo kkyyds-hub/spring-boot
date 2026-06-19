@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.studysystem.mapper.UploadFileMapper">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into upload_file(user_id, material_id, original_name, file_name, file_url, file_size, upload_user, create_time)
+        values (#{userId}, #{materialId}, #{originalName}, #{fileName}, #{fileUrl}, #{fileSize}, #{uploadUser}, #{createTime})
+    </insert>
+
+    <select id="selectByMaterialId" resultType="UploadFile">
+        select id, user_id, material_id, original_name, file_name, file_url, file_size, upload_user, create_time
+        from upload_file
+        where material_id = #{materialId}
+        order by create_time desc, id desc
+    </select>
+
+    <delete id="deleteById">
+        delete from upload_file where id = #{id}
+    </delete>
+</mapper>

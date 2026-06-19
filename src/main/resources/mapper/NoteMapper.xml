@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.studysystem.mapper.NoteMapper">
+    <insert id="insertBatch">
+        insert into material_note(material_id, create_user, note_title, note_content, create_time, update_time)
+        values
+        <foreach collection="notes" item="note" separator=",">
+            (#{note.materialId}, #{note.createUser}, #{note.noteTitle}, #{note.noteContent}, #{note.createTime}, #{note.updateTime})
+        </foreach>
+    </insert>
+
+    <delete id="deleteByMaterialId">
+        delete from material_note where material_id = #{materialId}
+    </delete>
+
+    <delete id="deleteByMaterialIds">
+        delete from material_note
+        where material_id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectByMaterialId" resultType="MaterialNote">
+        select id, material_id, create_user, note_title, note_content, create_time, update_time
+        from material_note
+        where material_id = #{materialId}
+        order by id
+    </select>
+</mapper>

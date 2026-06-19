@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.studysystem.mapper.MaterialMapper">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into study_material(user_id, title, category, status, important, content, create_time, update_time)
+        values (#{userId}, #{title}, #{category}, #{status}, #{important}, #{content}, #{createTime}, #{updateTime})
+    </insert>
+
+    <update id="update">
+        update study_material
+        set title = #{title},
+            category = #{category},
+            status = #{status},
+            important = #{important},
+            content = #{content},
+            update_time = #{updateTime}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from study_material where id = #{id}
+    </delete>
+
+    <delete id="deleteBatch">
+        delete from study_material
+        where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectById" resultType="StudyMaterial">
+        select id, user_id, title, category, status, important, content, create_time, update_time
+        from study_material
+        where id = #{id}
+    </select>
+
+    <sql id="queryWhere">
+        <where>
+            <if test="title != null and title != ''">
+                title like concat('%', #{title}, '%')
+            </if>
+            <if test="category != null and category != ''">
+                and category like concat('%', #{category}, '%')
+            </if>
+            <if test="status != null and status != ''">
+                and status = #{status}
+            </if>
+            <if test="important != null">
+                and important = #{important}
+            </if>
+            <if test="startDate != null and startDate != ''">
+                and create_time &gt;= concat(#{startDate}, ' 00:00:00')
+            </if>
+            <if test="endDate != null and endDate != ''">
+                and create_time &lt;= concat(#{endDate}, ' 23:59:59')
+            </if>
+        </where>
+    </sql>
+
+    <select id="page" resultType="StudyMaterial">
+        select id, user_id, title, category, status, important, content, create_time, update_time
+        from study_material
+        <include refid="queryWhere"/>
+        order by create_time desc, id desc
+        limit #{offset}, #{pageSize}
+    </select>
+
+    <select id="count" resultType="long">
+        select count(1)
+        from study_material
+        <include refid="queryWhere"/>
+    </select>
+
+    <select id="countByCategory" resultType="com.example.studysystem.vo.NameValueVO">
+        select category as name, count(1) as value
+        from study_material
+        group by category
+        order by value desc
+    </select>
+
+    <select id="countByMonth" resultType="com.example.studysystem.vo.NameValueVO">
+        select date_format(create_time, '%Y-%m') as name, count(1) as value
+        from study_material
+        group by date_format(create_time, '%Y-%m')
+        order by name
+    </select>
+
+    <select id="countByStatus" resultType="com.example.studysystem.vo.NameValueVO">
+        select status as name, count(1) as value
+        from study_material
+        group by status
+        order by value desc
+    </select>
+</mapper>
