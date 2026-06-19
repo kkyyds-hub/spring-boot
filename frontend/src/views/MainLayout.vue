@@ -13,7 +13,7 @@
         </el-menu-item>
         <el-menu-item index="/files">
           <el-icon><UploadFilled /></el-icon>
-          <span>文件上传</span>
+          <span>公共资料库</span>
         </el-menu-item>
         <el-menu-item index="/stats">
           <el-icon><TrendCharts /></el-icon>

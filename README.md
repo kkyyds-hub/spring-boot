@@ -15,7 +15,7 @@
 | 登录认证模块 | `AuthController`、`AuthService`、`AuthServiceImpl`、`UserMapper`，包含登录和注册 |
 | 登录拦截模块 | `TokenInterceptor`、`WebConfig` |
 | 信息管理模块 | `MaterialController`、`MaterialService`、`MaterialServiceImpl`、`MaterialMapper`、`NoteMapper` |
-| 文件上传模块 | `FileController`、`FileService`、`FileServiceImpl`、`CloudFileServiceImpl`、前端 `FileUploadView.vue` |
+| 文件上传模块 | `FileController`、`FileService`、`FileServiceImpl`、`CloudFileServiceImpl`、前端公共资料库 `FileUploadView.vue` |
 | 数据统计模块 | `StatsController`、`StatsService`、`StatsServiceImpl`、前端 `StatsView.vue` |
 | 操作日志模块 | `LogController`、`LogService`、`LogServiceImpl`、`OperationLogMapper` |
 
@@ -29,7 +29,7 @@
 | 学习状态和重点标记 | `study_material.status`、`study_material.important`、前端资料表单和筛选区 |
 | 资料附件关联 | `upload_file.material_id`、`FileServiceImpl`、资料详情页附件上传和列表 |
 
-系统数据共享。不同账号可以看到同一批分类、资料、附件和日志；新增笔记会记录添加人，操作日志会记录操作人。
+系统数据共享。不同账号可以看到同一批分类、资料、公共资料库文件、附件和日志；新增笔记会记录添加人，操作日志会记录操作人。
 
 ## 数据库初始化
 
@@ -120,9 +120,11 @@ lsof -ti:15180 | xargs kill
 
 登录后的接口都会先经过 `TokenInterceptor`，校验请求头中的 `token` 或 `Authorization`。
 
-文件上传链路：
+公共资料库上传链路：
 
 `FileUploadView.vue` 选择文件 -> `FileController.upload` 接收文件 -> `FileServiceImpl.upload` 保存上传记录和日志 -> `CloudFileServiceImpl.upload` 判断 OSS 配置，配置完整时上传阿里云 OSS，否则保存本地 `uploads`。
+
+`upload_file.material_id` 为空表示公共资料库文件，不为空表示某条学习资料的附件。
 
 ## 推荐演示顺序
 

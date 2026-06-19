@@ -7,6 +7,13 @@
         values (#{userId}, #{materialId}, #{originalName}, #{fileName}, #{fileUrl}, #{fileSize}, #{uploadUser}, #{createTime})
     </insert>
 
+    <select id="selectPublicFiles" resultType="UploadFile">
+        select id, user_id, material_id, original_name, file_name, file_url, file_size, upload_user, create_time
+        from upload_file
+        where material_id is null
+        order by create_time desc, id desc
+    </select>
+
     <select id="selectByMaterialId" resultType="UploadFile">
         select id, user_id, material_id, original_name, file_name, file_url, file_size, upload_user, create_time
         from upload_file

@@ -10,6 +10,8 @@ import java.util.List;
 public interface UploadFileMapper {
     int insert(UploadFile uploadFile);
 
+    List<UploadFile> selectPublicFiles();
+
     List<UploadFile> selectByMaterialId(@Param("materialId") Long materialId);
 
     int deleteById(@Param("id") Long id);

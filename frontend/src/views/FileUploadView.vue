@@ -1,45 +1,73 @@
 <template>
-  <section class="page">
+  <section class="page library-page">
     <div class="page-head">
-      <h2>文件上传</h2>
+      <h2>公共资料库</h2>
+      <el-button v-if="records.length" class="round-upload" type="primary" circle :icon="UploadFilled" @click="dialogVisible = true" />
     </div>
 
-    <el-upload drag :http-request="handleUpload" :show-file-list="false">
+    <el-upload v-if="!records.length" drag :http-request="handleUpload" :show-file-list="false" class="library-drop">
       <el-icon class="upload-icon"><UploadFilled /></el-icon>
-      <div>点击或拖拽文件到这里上传</div>
+      <div>点击或拖拽上传公共学习资料</div>
     </el-upload>
 
-    <el-table v-if="records.length" :data="records" border class="upload-table">
-      <el-table-column prop="originalName" label="文件名" min-width="180" />
-      <el-table-column prop="uploadUser" label="上传人" width="120" />
-      <el-table-column prop="createTime" label="上传时间" width="180" />
-      <el-table-column prop="fileUrl" label="访问地址" min-width="260" show-overflow-tooltip />
-      <el-table-column label="操作" width="90">
-        <template #default="{ row }">
-          <el-button link type="primary" @click="openFile(row.fileUrl)">打开</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+    <div v-else class="library-grid">
+      <div v-for="item in records" :key="item.id" class="library-item">
+        <div class="file-icon">{{ suffix(item.originalName) }}</div>
+        <div class="file-info">
+          <h3>{{ item.originalName }}</h3>
+          <p>上传人：{{ item.uploadUser }}</p>
+          <p>大小：{{ formatSize(item.fileSize) }}</p>
+          <p>{{ item.createTime }}</p>
+        </div>
+        <el-button type="primary" plain @click="openFile(item.fileUrl)">打开</el-button>
+      </div>
+    </div>
+
+    <el-dialog v-model="dialogVisible" title="上传公共学习资料" width="560px">
+      <el-upload drag :http-request="handleUpload" :show-file-list="false">
+        <el-icon class="upload-icon"><UploadFilled /></el-icon>
+        <div>点击或拖拽文件到这里上传</div>
+      </el-upload>
+    </el-dialog>
   </section>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { UploadFilled } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
-import { uploadFile } from "../api";
+import { listFiles, uploadFile } from "../api";
 
 const records = ref([]);
+const dialogVisible = ref(false);
+
+async function load() {
+  records.value = await listFiles();
+}
 
 async function handleUpload(option) {
   const data = new FormData();
   data.append("file", option.file);
   const result = await uploadFile(data);
   records.value.unshift(result);
+  dialogVisible.value = false;
   ElMessage.success("上传成功");
+}
+
+function suffix(name) {
+  const text = name.includes(".") ? name.substring(name.lastIndexOf(".") + 1) : "FILE";
+  return text.slice(0, 4).toUpperCase();
+}
+
+function formatSize(size) {
+  if (size < 1024) return `${size} B`;
+  if (size < 1024 * 1024) return `${(size / 1024).toFixed(1)} KB`;
+  return `${(size / 1024 / 1024).toFixed(1)} MB`;
 }
 
 function openFile(url) {
   window.open(url, "_blank");
 }
+
+onMounted(load);
 </script>

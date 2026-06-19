@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class FileServiceImpl implements FileService {
@@ -22,6 +23,11 @@ public class FileServiceImpl implements FileService {
         this.cloudFileService = cloudFileService;
         this.uploadFileMapper = uploadFileMapper;
         this.logService = logService;
+    }
+
+    @Override
+    public List<UploadFile> listPublicFiles() {
+        return uploadFileMapper.selectPublicFiles();
     }
 
     @Override
