@@ -2,9 +2,6 @@
   <section class="page library-page">
     <div class="page-head">
       <h2>公共资料库</h2>
-      <button class="header-upload" type="button" title="上传资料" @click="dialogVisible = true">
-        <el-icon><UploadFilled /></el-icon>
-      </button>
     </div>
 
     <el-upload v-if="!records.length" drag :http-request="handleUpload" :show-file-list="false" class="library-drop">
@@ -39,6 +36,10 @@
         :total="records.length"
       />
     </div>
+
+    <button class="floating-upload" type="button" title="上传资料" @click="dialogVisible = true">
+      <el-icon><UploadFilled /></el-icon>
+    </button>
 
     <el-dialog v-model="dialogVisible" title="上传公共学习资料" width="560px">
       <el-upload drag :http-request="handleUpload" :show-file-list="false">
